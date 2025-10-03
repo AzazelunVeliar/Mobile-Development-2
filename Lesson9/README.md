@@ -32,3 +32,5 @@ UseCase’ы (SaveMovieToFavoriteUseCase, GetFavoriteFilmUseCase) работаю
 <img width="542" height="1052" alt="NewFilm" src="https://github.com/user-attachments/assets/dfd265a9-d3b4-44de-8dcf-037418bbab83" />
 <img width="540" height="1050" alt="SaveNewFilm" src="https://github.com/user-attachments/assets/8d5d3d0c-dbc0-4c83-8b8d-87bf21c293a5" />
 <img width="540" height="1053" alt="FavoriteFilm" src="https://github.com/user-attachments/assets/00d740ef-48b4-46c8-9252-0b3d4c99dd4b" />
+
+Для приложения Plantpal были созданы все классы use-case и repositories.
