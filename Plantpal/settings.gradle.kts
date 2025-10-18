@@ -22,3 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "Plantpal"
 include(":app")
 include(":plantpal")
+include(":data")
+include(":domain")
