@@ -11,8 +11,7 @@
 
 Далее для приложения PlantPal был создан дизайн основных экранов.
 
-<img width="979" height="1103" alt="image" src="https://github.com/user-attachments/assets/3286620d-e99b-466a-9d35-1db2b9ccca65" />
-
+<img width="767" height="1187" alt="image" src="https://github.com/user-attachments/assets/7b8c9e25-7bc4-4278-92b2-2f2a41f7f932" />
 
 Были созданы отдельные модули data и domain (как в первом задании) и перенесены все соответствующие файлы в соответствующие модули и были созданы отдельные модели для слоёв data и domain.
 
