@@ -1,27 +1,20 @@
 package ru.mirea.khudyakovma.movieproject.presentation;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
-
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.lifecycle.ViewModelProvider;
 import ru.mirea.khudyakovma.movieproject.R;
-import ru.mirea.khudyakovma.data.storage.MovieStorage;
-import ru.mirea.khudyakovma.domain.models.Movie;
-import ru.mirea.khudyakovma.domain.repository.MovieRepository;
-import ru.mirea.khudyakovma.domain.usecases.GetFavoriteFilmUseCase;
-import ru.mirea.khudyakovma.domain.usecases.SaveMovieToFavoriteUseCase;
-import ru.mirea.khudyakovma.data.repository.MovieRepositoryImpl;
-import ru.mirea.khudyakovma.data.storage.SharedPrefMovieStorage;
+
 public class MainActivity extends AppCompatActivity {
     private EditText editTextMovie;
     private TextView textViewMovie;
+    private TextView textViewSaveResult;
+    private TextView textViewMergedTitle;
     private Button buttonSave, buttonGet;
-
-    private MovieRepositoryImpl movieRepository;
+    private MainViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,26 +23,22 @@ public class MainActivity extends AppCompatActivity {
 
         editTextMovie = findViewById(R.id.editTextMovie);
         textViewMovie = findViewById(R.id.textViewMovie);
+        textViewSaveResult = findViewById(R.id.textViewSaveResult);
+        textViewMergedTitle = findViewById(R.id.textViewMergedTitle);
         buttonSave = findViewById(R.id.buttonSaveMovie);
         buttonGet = findViewById(R.id.buttonGetMovie);
 
-        MovieStorage sharedPrefMovieStorage = new SharedPrefMovieStorage(this);
-        MovieRepository movieRepository = new MovieRepositoryImpl(sharedPrefMovieStorage);
-        buttonSave.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                boolean result = new SaveMovieToFavoriteUseCase(movieRepository)
-                        .execute(new Movie(1, editTextMovie.getText().toString()));
-                textViewMovie.setText("Save result: " + result);
-            }
-        });
+        vm = new ViewModelProvider(this, new ViewModelFactory(this))
+                .get(MainViewModel.class);
 
-        buttonGet.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Movie movie = new GetFavoriteFilmUseCase(movieRepository).execute();
-                textViewMovie.setText("Favorite: " + movie.getName());
-            }
-        });
+        vm.getFavoriteMovie().observe(this, textViewMovie::setText);
+        if (textViewSaveResult != null) vm.getSaveResult().observe(this, textViewSaveResult::setText);
+        if (textViewMergedTitle != null) vm.getMergedTitle().observe(this, textViewMergedTitle::setText);
+
+        buttonSave.setOnClickListener(v -> vm.saveMovie(editTextMovie.getText().toString()));
+        buttonGet.setOnClickListener(v -> vm.loadFavoriteMovie());
+
+        vm.mockLoadFromDb("Title from DB");
+        vm.mockLoadFromNet("Title from Network");
     }
 }

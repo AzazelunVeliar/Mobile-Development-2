@@ -4,9 +4,9 @@ import android.content.Context;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import ru.mirea.khudyakovma.data.repository.PlantRepositoryImpl;
+import ru.mirea.khudyakovma.data.repository.FakePlantRepository;
+import ru.mirea.khudyakovma.data.repository.FakeWeatherRepository;
 import ru.mirea.khudyakovma.data.repository.UserRepositoryImpl;
-import ru.mirea.khudyakovma.data.repository.WeatherRepositoryImpl;
 import ru.mirea.khudyakovma.domain.repository.PlantRepository;
 import ru.mirea.khudyakovma.domain.repository.UserRepository;
 import ru.mirea.khudyakovma.domain.repository.WeatherRepository;
@@ -21,7 +21,7 @@ public class AppModule {
     }
 
     public PlantRepository providePlantRepository() {
-        return PlantRepositoryImpl.create(context);
+        return new FakePlantRepository();
     }
 
     public UserRepository provideUserRepository() {
@@ -29,7 +29,7 @@ public class AppModule {
     }
 
     public WeatherRepository provideWeatherRepository() {
-        return new WeatherRepositoryImpl(context);
+        return new FakeWeatherRepository();
     }
 
     public ExecutorService provideExecutor() {

@@ -7,17 +7,15 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.google.firebase.auth.FirebaseAuth;
-
-import ru.mirea.khudyakovma.domain.models.User;
 import ru.mirea.khudyakovma.plantpal.R;
 
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText emailField, passwordField, confirmField, nameField;
     private Button registerButton, toLoginButton;
-    private FirebaseAuth mAuth;
+    private RegisterViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,38 +29,30 @@ public class RegisterActivity extends AppCompatActivity {
         registerButton = findViewById(R.id.buttonRegister);
         toLoginButton = findViewById(R.id.buttonGoToLogin);
 
-        mAuth = FirebaseAuth.getInstance();
+        vm = new ViewModelProvider(this, new RegisterVMFactory()).get(RegisterViewModel.class);
 
-        registerButton.setOnClickListener(v -> registerUser());
+        vm.getRegisterSuccess().observe(this, ok -> {
+            if (ok == null) return;
+            Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+        });
+
+        vm.getRegisterError().observe(this, msg -> {
+            if (msg == null) return;
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        });
+
+        registerButton.setOnClickListener(v ->
+                vm.register(
+                        emailField.getText().toString().trim(),
+                        passwordField.getText().toString().trim(),
+                        confirmField.getText().toString().trim(),
+                        nameField.getText().toString().trim()));
+
         toLoginButton.setOnClickListener(v -> {
             startActivity(new Intent(this, LoginActivity.class));
             finish();
         });
-    }
-
-    private void registerUser() {
-        String email = emailField.getText().toString().trim();
-        String password = passwordField.getText().toString().trim();
-        String confirm = confirmField.getText().toString().trim();
-        String name = nameField.getText().toString().trim();
-
-        if (email.isEmpty() || password.isEmpty() || confirm.isEmpty() || name.isEmpty()) {
-            Toast.makeText(this, "Заполните все поля", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (!password.equals(confirm)) {
-            Toast.makeText(this, "Пароли не совпадают", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnSuccessListener(authResult -> {
-                    Toast.makeText(this, "Регистрация успешна", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(this, LoginActivity.class));
-                    finish();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Ошибка регистрации: " + e.getMessage(), Toast.LENGTH_LONG).show());
     }
 }

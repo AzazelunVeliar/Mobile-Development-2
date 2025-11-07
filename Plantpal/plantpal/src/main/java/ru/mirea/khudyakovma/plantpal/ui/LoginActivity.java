@@ -7,9 +7,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-import ru.mirea.khudyakovma.data.repository.UserRepositoryImpl;
-import ru.mirea.khudyakovma.domain.usecases.SignInUseCase;
 import ru.mirea.khudyakovma.plantpal.MainActivity;
 import ru.mirea.khudyakovma.plantpal.R;
 
@@ -17,7 +16,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText emailField, passwordField;
     private Button loginButton, toRegisterButton;
-    private SignInUseCase signInUseCase;
+    private LoginViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,31 +28,24 @@ public class LoginActivity extends AppCompatActivity {
         loginButton = findViewById(R.id.buttonLogin);
         toRegisterButton = findViewById(R.id.buttonGoToRegister);
 
-        signInUseCase = new SignInUseCase(new UserRepositoryImpl(this));
+        vm = new ViewModelProvider(this, new LoginVMFactory(this)).get(LoginViewModel.class);
 
-        loginButton.setOnClickListener(v -> loginUser());
+        vm.getLoginSuccess().observe(this, ok -> {
+            if (ok == null) return;
+            Toast.makeText(this, "Вход выполнен успешно", Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        });
+
+        vm.getLoginError().observe(this, msg -> {
+            if (msg == null) return;
+            Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
+        });
+
+        loginButton.setOnClickListener(v ->
+                vm.login(emailField.getText().toString().trim(), passwordField.getText().toString().trim()));
 
         toRegisterButton.setOnClickListener(v ->
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class)));
-    }
-
-    private void loginUser() {
-        String email = emailField.getText().toString().trim();
-        String password = passwordField.getText().toString().trim();
-
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Введите email и пароль", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        boolean success = signInUseCase.execute(email, password);
-
-        if (success) {
-            Toast.makeText(this, "Вход выполнен успешно", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(LoginActivity.this, MainActivity.class));
-            finish();
-        } else {
-            Toast.makeText(this, "Ошибка входа. Проверьте данные.", Toast.LENGTH_LONG).show();
-        }
+                startActivity(new Intent(this, RegisterActivity.class)));
     }
 }

@@ -1,24 +1,29 @@
 package ru.mirea.khudyakovma.plantpal;
 
+import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import com.google.android.material.button.MaterialButton;
+
+import ru.mirea.khudyakovma.plantpal.PlantList;
+import ru.mirea.khudyakovma.plantpal.R;
+import ru.mirea.khudyakovma.plantpal.weather;
 
 public class MainActivity extends AppCompatActivity {
+    private MaterialButton btnOpenPlants;
+    private MaterialButton btnOpenWeather;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        btnOpenPlants = findViewById(R.id.btnOpenPlants);
+        btnOpenWeather = findViewById(R.id.btnOpenWeather);
+
+        btnOpenPlants.setOnClickListener(v ->
+                startActivity(new Intent(this, PlantList.class)));
+
+        btnOpenWeather.setOnClickListener(v ->
+                startActivity(new Intent(this, weather.class)));
     }
 }

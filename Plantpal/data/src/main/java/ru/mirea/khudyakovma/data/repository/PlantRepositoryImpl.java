@@ -18,7 +18,6 @@ public class PlantRepositoryImpl implements PlantRepository {
         this.executor = executor;
     }
 
-    // Фабричный метод для удобного создания
     public static PlantRepositoryImpl create(Context context) {
         AppDatabase database = AppDatabase.getInstance(context);
         ExecutorService executor = Executors.newSingleThreadExecutor();
