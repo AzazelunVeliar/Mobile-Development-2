@@ -1,34 +1,43 @@
 package ru.mirea.khudyakovma.movieproject.data.repository;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+import java.util.ArrayList;
+import java.util.List;
 
 import ru.mirea.khudyakovma.movieproject.domain.models.Movie;
 import ru.mirea.khudyakovma.movieproject.domain.repository.MovieRepository;
 
 public class MovieRepositoryImpl implements MovieRepository {
-    private static final String PREF_NAME = "movies_pref";
-    private static final String KEY_ID = "movie_id";
-    private static final String KEY_NAME = "movie_name";
 
-    private final SharedPreferences sharedPreferences;
+    private final List<Movie> movies = new ArrayList<>();
 
-    public MovieRepositoryImpl(Context context) {
-        this.sharedPreferences = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
+    public MovieRepositoryImpl() {
+        movies.add(new Movie(1, "Interstellar"));
+        movies.add(new Movie(2, "Inception"));
+        movies.add(new Movie(3, "The Matrix"));
+        movies.add(new Movie(4, "The Lord of the Rings"));
+        movies.add(new Movie(5, "Fight Club"));
+        movies.add(new Movie(6, "Pulp Fiction"));
+        movies.add(new Movie(7, "The Dark Knight"));
+        movies.add(new Movie(8, "Forrest Gump"));
+        movies.add(new Movie(9, "The Shawshank Redemption"));
+        movies.add(new Movie(10, "Blade Runner 2049"));
     }
 
     @Override
     public boolean saveMovie(Movie movie) {
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(KEY_ID, movie.getId());
-        editor.putString(KEY_NAME, movie.getName());
-        return editor.commit();
+        return movies.add(movie);
     }
 
     @Override
     public Movie getMovie() {
-        int id = sharedPreferences.getInt(KEY_ID, -1);
-        String name = sharedPreferences.getString(KEY_NAME, "No movie saved");
-        return new Movie(id, name);
+        if (movies.isEmpty()) {
+            return new Movie(-1, "No movie");
+        }
+        return movies.get(0);
+    }
+
+    @Override
+    public List<Movie> getMovies() {
+        return new ArrayList<>(movies);
     }
 }
