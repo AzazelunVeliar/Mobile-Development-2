@@ -3,28 +3,46 @@ package ru.mirea.khudyakovma.movieproject.presentation;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.navigation.NavController;
+import androidx.navigation.fragment.NavHostFragment;
+import androidx.navigation.ui.AppBarConfiguration;
+import androidx.navigation.ui.NavigationUI;
 
 import ru.mirea.khudyakovma.movieproject.R;
+import ru.mirea.khudyakovma.movieproject.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
 
-    private MovieViewModel viewModel;
-    private MovieAdapter adapter;
+    private ActivityMainBinding binding;
+    private AppBarConfiguration appBarConfiguration;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        RecyclerView recyclerView = findViewById(R.id.recyclerViewMovies);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MovieAdapter();
-        recyclerView.setAdapter(adapter);
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        viewModel = new ViewModelProvider(this).get(MovieViewModel.class);
-        viewModel.getMovies().observe(this, movies -> adapter.setItems(movies));
+        setSupportActionBar(binding.toolbar);
+
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+
+        appBarConfiguration = new AppBarConfiguration.Builder(
+                R.id.moviesFragment,
+                R.id.favoritesFragment,
+                R.id.profileFragment,
+                R.id.loginFragment
+        ).setOpenableLayout(binding.drawerLayout).build();
+
+        NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+        NavigationUI.setupWithNavController(binding.navView, navController);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+        NavController navController = navHostFragment.getNavController();
+        return NavigationUI.navigateUp(navController, appBarConfiguration) || super.onSupportNavigateUp();
     }
 }

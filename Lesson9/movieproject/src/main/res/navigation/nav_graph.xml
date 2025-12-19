@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/moviesFragment">
+
+    <fragment
+        android:id="@+id/moviesFragment"
+        android:name="ru.mirea.khudyakovma.movieproject.presentation.ui.fragments.MoviesFragment"
+        android:label="Каталог">
+        <action
+            android:id="@+id/action_moviesFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/favoritesFragment"
+        android:name="ru.mirea.khudyakovma.movieproject.presentation.ui.fragments.FavoritesFragment"
+        android:label="Избранное">
+        <action
+            android:id="@+id/action_favoritesFragment_to_movieDetailsFragment"
+            app:destination="@id/movieDetailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/movieDetailsFragment"
+        android:name="ru.mirea.khudyakovma.movieproject.presentation.ui.fragments.MovieDetailsFragment"
+        android:label="Детали">
+        <argument
+            android:name="movieId"
+            app:argType="integer" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="ru.mirea.khudyakovma.movieproject.presentation.ui.fragments.ProfileFragment"
+        android:label="Профиль" />
+
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="ru.mirea.khudyakovma.movieproject.presentation.ui.fragments.LoginFragment"
+        android:label="Вход" />
+
+</navigation>

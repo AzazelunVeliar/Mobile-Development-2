@@ -10,7 +10,7 @@ public class SaveMovieToFavoriteUseCase {
         this.movieRepository = movieRepository;
     }
 
-    public boolean execute(Movie movie) {
-        return movieRepository.saveMovie(movie);
-    }
+    //public boolean execute(Movie movie) {
+        //return movieRepository.saveMovie(movie);
+    //}
 }

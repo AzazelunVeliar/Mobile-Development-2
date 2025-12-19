@@ -10,7 +10,7 @@ public class GetFavoriteFilmUseCase {
         this.movieRepository = movieRepository;
     }
 
-    public Movie execute() {
-        return movieRepository.getMovie();
-    }
+    //public Movie execute() {
+        //return movieRepository.getMovie();
+    //}
 }
