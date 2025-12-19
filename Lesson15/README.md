@@ -54,3 +54,54 @@
 <img width="427" height="947" alt="infoNavDraw" src="https://github.com/user-attachments/assets/2aa40372-0219-434b-961a-e39535658517" />
 
 <img width="425" height="945" alt="profNavDraw" src="https://github.com/user-attachments/assets/b055345f-02c6-4db8-82af-f56c7d08dc1b" />
+
+
+Контрольное задание
+
+movieproject
+
+Было доработано приложение, созданное ранее.
+Вместо одного экрана была реализована полноценная навигация между экранами с использованием Navigation Component и Navigation Drawer.
+Приложение было разделено на несколько экранов:
+экран каталога фильмов,
+экран деталей фильма,
+экран избранного,
+экран профиля пользователя.
+
+Навигация между экранами осуществляется через NavHostFragment, а также через боковое меню Navigation Drawer.
+
+Используемый NavController в MainActivity
+
+    NavController navController = Navigation.findNavController(this, R.id.navHost);
+    NavigationUI.setupWithNavController(binding.navView, navController);
+    NavigationUI.setupActionBarWithNavController(this, navController, appBarConfiguration);
+
+Для хранения избранных фильмов была реализована локальная база данных с использованием Room.
+Это позволило сохранять избранные элементы между запусками приложения.
+
+Была создана:
+сущность FavoriteMovieEntity,
+DAO-интерфейс FavoriteMovieDao,
+база данных AppDatabase.
+
+Инициализация базы данных
+    
+    AppDatabase db = Room.databaseBuilder(
+        context.getApplicationContext(),
+        AppDatabase.class,
+        "movie_db"
+    ).fallbackToDestructiveMigration().build();
+
+Добавление фильма в избранное
+
+    favoriteDao.upsert(
+    new FavoriteMovieEntity(
+        movie.getId(),
+        movie.getTitle(),
+        movie.getDescription(),
+        movie.getImageUrl(),
+        movie.getPrice()
+    )
+    );
+
+Использовались замоканные данные вместо раельного API.
